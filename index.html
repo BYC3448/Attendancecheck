@@ -10,79 +10,200 @@
             margin: 0 auto;
             padding: 20px;
             font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .date {
             text-align: center;
-            font-size: 1.2em;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            color: #495057;
+            font-weight: 500;
+        }
+        .date-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        .date-selector select {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 300px;
+            font-size: 0.95em;
+            color: #495057;
         }
         .student-input {
             display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .input-row {
+            display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            justify-content: center;
+            margin-top: 10px;
+            border-top: 1px solid #dee2e6;
+            padding-top: 20px;
         }
-        .student-input input {
-            flex: 1;
-            padding: 8px;
+        .input-row input {
+            width: 300px;
+            padding: 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 0.95em;
         }
-        .student-input button {
-            padding: 8px 16px;
-            background-color: #4CAF50;
-            color: white;
+        .input-row input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+        button {
+            padding: 12px 20px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        button.save-btn,
+        button.clear-btn {
+            width: 150px;
+            text-align: center;
         }
         .student-list {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background-color: white;
+            overflow: hidden;
         }
         .student-item {
             display: flex;
             align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            transition: background-color 0.2s;
+        }
+        .student-item:last-child {
+            border-bottom: none;
+        }
+        .student-item:hover {
+            background-color: #f8f9fa;
         }
         .student-number {
-            min-width: 30px;
-            margin-right: 10px;
-            color: #666;
+            min-width: 40px;
+            margin-right: 15px;
+            color: #868e96;
+            font-weight: 500;
         }
         .student-name {
             flex: 1;
+            color: #495057;
+            font-weight: 500;
         }
         .attendance-check {
             display: flex;
-            gap: 20px;
+            gap: 30px;
+            margin: 0 20px;
         }
         .check-group {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            color: #495057;
         }
-        .delete-btn {
-            background: #ff4444;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 5px 10px;
+        .check-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
             cursor: pointer;
+            border-radius: 4px;
+            border: 2px solid #dee2e6;
+        }
+        button.add-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+        button.add-btn:hover {
+            background-color: #45a049;
+        }
+        button.save-btn {
+            background-color: #228be6;
+            color: white;
+        }
+        button.save-btn:hover {
+            background-color: #1c7ed6;
+        }
+        button.clear-btn {
+            background-color: #fd7e14;
+            color: white;
+        }
+        button.clear-btn:hover {
+            background-color: #f76707;
+        }
+        button.delete-btn {
+            background: #adb5bd;
+            color: white;
+            padding: 8px 16px;
+        }
+        button.delete-btn:hover {
+            background: #868e96;
+        }
+        .unsaved-changes {
+            color: #e03131;
+            font-size: 0.9em;
             margin-left: 10px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
-    <div class="date" id="currentDate"></div>
-    
-    <div class="student-input">
-        <input type="text" id="studentName" placeholder="학생 이름 입력">
-        <button onclick="addStudent()">추가</button>
+    <div class="container">
+        <div class="date" id="currentDate"></div>
+        
+        <div class="date-selector">
+            <select id="savedDates" onchange="loadSavedDate(this.value)">
+                <option value="">저장된 날짜 선택</option>
+            </select>
+            <span id="unsavedChanges" class="unsaved-changes" style="display: none">*저장되지 않은 변경사항</span>
+        </div>
+
+        <div class="button-group">
+            <button class="save-btn" onclick="saveCurrentDate()">저장</button>
+            <button class="clear-btn" onclick="clearAllChecks()">깨끗이</button>
+        </div>
+
+        <div class="student-list" id="studentList"></div>
+
+        <div class="input-row">
+            <input type="text" id="studentName" placeholder="학생 이름 입력">
+            <button class="add-btn" onclick="addStudent()">추가</button>
+        </div>
     </div>
 
-    <div class="student-list" id="studentList"></div>
-
     <script>
+        let hasUnsavedChanges = false;
+        
         // 현재 날짜 표시
         function updateDate() {
             const now = new Date();
@@ -98,6 +219,58 @@
         // 학생 목록과 출석 데이터
         let students = JSON.parse(localStorage.getItem('students') || '[]');
         let attendance = JSON.parse(localStorage.getItem('attendance') || '{}');
+        let currentViewDate = new Date().toISOString().split('T')[0];
+
+        // 저장된 날짜 목록 업데이트
+        function updateSavedDatesList() {
+            const select = document.getElementById('savedDates');
+            const currentValue = select.value;
+            const dates = Object.keys(attendance).sort().reverse();
+            
+            select.innerHTML = '<option value="">저장된 날짜 선택</option>';
+            dates.forEach(date => {
+                const d = new Date(date);
+                const dateStr = d.toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'long'
+                });
+                const option = new Option(dateStr, date);
+                if (date === currentValue) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+        }
+
+        // 저장된 날짜 불러오기
+        function loadSavedDate(date) {
+            if (!date) {
+                currentViewDate = new Date().toISOString().split('T')[0];
+                updateDate();
+            } else {
+                currentViewDate = date;
+                const d = new Date(date);
+                document.getElementById('currentDate').textContent = d.toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'long'
+                });
+            }
+            renderStudentList();
+            hasUnsavedChanges = false;
+            document.getElementById('unsavedChanges').style.display = 'none';
+        }
+
+        // 현재 날짜 저장
+        function saveCurrentDate() {
+            saveAttendance();
+            hasUnsavedChanges = false;
+            document.getElementById('unsavedChanges').style.display = 'none';
+            updateSavedDatesList();
+        }
 
         // 학생 추가
         function addStudent() {
@@ -124,15 +297,15 @@
 
         // 출석 상태 토글
         function toggleAttendance(studentId, period) {
-            const today = new Date().toISOString().split('T')[0];
-            if (!attendance[today]) {
-                attendance[today] = {};
+            if (!attendance[currentViewDate]) {
+                attendance[currentViewDate] = {};
             }
-            if (!attendance[today][studentId]) {
-                attendance[today][studentId] = {};
+            if (!attendance[currentViewDate][studentId]) {
+                attendance[currentViewDate][studentId] = {};
             }
-            attendance[today][studentId][period] = !attendance[today][studentId][period];
-            saveAttendance();
+            attendance[currentViewDate][studentId][period] = !attendance[currentViewDate][studentId][period];
+            hasUnsavedChanges = true;
+            document.getElementById('unsavedChanges').style.display = 'inline';
         }
 
         // 학생 목록 저장
@@ -148,7 +321,6 @@
         // 학생 목록 렌더링
         function renderStudentList() {
             const list = document.getElementById('studentList');
-            const today = new Date().toISOString().split('T')[0];
             list.innerHTML = students.map((student, index) => `
                 <div class="student-item">
                     <span class="student-number">${index + 1}.</span>
@@ -156,13 +328,13 @@
                     <div class="attendance-check">
                         <label class="check-group">
                             <input type="checkbox" 
-                                ${attendance[today]?.[student.id]?.morning ? 'checked' : ''}
+                                ${attendance[currentViewDate]?.[student.id]?.morning ? 'checked' : ''}
                                 onchange="toggleAttendance('${student.id}', 'morning')">
                             조회
                         </label>
                         <label class="check-group">
                             <input type="checkbox"
-                                ${attendance[today]?.[student.id]?.afternoon ? 'checked' : ''}
+                                ${attendance[currentViewDate]?.[student.id]?.afternoon ? 'checked' : ''}
                                 onchange="toggleAttendance('${student.id}', 'afternoon')">
                             종례
                         </label>
@@ -172,8 +344,24 @@
             `).join('');
         }
 
+        // 모든 체크박스 초기화
+        function clearAllChecks() {
+            if (attendance[currentViewDate]) {
+                for (let studentId in attendance[currentViewDate]) {
+                    attendance[currentViewDate][studentId] = {
+                        morning: false,
+                        afternoon: false
+                    };
+                }
+                hasUnsavedChanges = true;
+                document.getElementById('unsavedChanges').style.display = 'inline';
+                renderStudentList();
+            }
+        }
+
         // 초기화
         updateDate();
+        updateSavedDatesList();
         renderStudentList();
 
         // Enter 키로 학생 추가
