@@ -44,6 +44,11 @@
             padding: 10px;
             border-bottom: 1px solid #eee;
         }
+        .student-number {
+            min-width: 30px;
+            margin-right: 10px;
+            color: #666;
+        }
         .student-name {
             flex: 1;
         }
@@ -144,8 +149,9 @@
         function renderStudentList() {
             const list = document.getElementById('studentList');
             const today = new Date().toISOString().split('T')[0];
-            list.innerHTML = students.map(student => `
+            list.innerHTML = students.map((student, index) => `
                 <div class="student-item">
+                    <span class="student-number">${index + 1}.</span>
                     <span class="student-name">${student.name}</span>
                     <div class="attendance-check">
                         <label class="check-group">
